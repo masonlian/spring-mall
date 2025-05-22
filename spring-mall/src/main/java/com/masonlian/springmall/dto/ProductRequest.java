@@ -1,29 +1,16 @@
-package com.masonlian.springmall.model;
+package com.masonlian.springmall.dto;
 
 import com.masonlian.springmall.constant.ProductCategory;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.Date;
 
+public class ProductRequest {
 
-public class Product {
-
-    private Integer productId;
+    @NotNull
     private String productName;
     private ProductCategory category;
     private String imageUrl;
-    private Integer  price;
-    private Integer stock;
-    private String description;
-    private Date createDate;
-    private Date lastModifiedDate;
-
-    public Integer getProductId() {
-        return productId;
-    }
-
-    public void setProductId(Integer productId) {
-        this.productId = productId;
-    }
 
     public String getProductName() {
         return productName;
@@ -40,6 +27,7 @@ public class Product {
     public void setCategory(ProductCategory category) {
         this.category = category;
     }
+
     public String getImageUrl() {
         return imageUrl;
     }
@@ -72,19 +60,7 @@ public class Product {
         this.description = description;
     }
 
-    public Date getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
-    }
-
-    public Date getLastModifiedDate() {
-        return lastModifiedDate;
-    }
-
-    public void setLastModifiedDate(Date lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-    }
+    private Integer  price;
+    private Integer stock;
+    private String description;
 }
