@@ -8,4 +8,6 @@ import org.springframework.stereotype.Component;
 public interface ProductService {
    Product getProductById(Integer productId);
    Integer createProduct(ProductRequest productRequest);
+   public void updateProduct(Integer productId,ProductRequest productRequest);
+   public void deleteProductById(Integer productId);
 }

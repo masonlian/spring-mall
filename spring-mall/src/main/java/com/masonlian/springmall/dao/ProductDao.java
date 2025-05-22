@@ -9,5 +9,6 @@ public interface ProductDao {
 
     public Product getByproductId(Integer productId);
     public Integer createProduct(ProductRequest productRequest);
-
+    public  void updateProduct(Integer productId, ProductRequest productRequest);
+    public void deleteProductById(Integer productId);
 }
