@@ -1,5 +1,6 @@
 package com.masonlian.springmall.controller;
 
+import com.masonlian.springmall.constant.ProductCategory;
 import com.masonlian.springmall.dao.ProductDao;
 import com.masonlian.springmall.dto.ProductRequest;
 import com.masonlian.springmall.model.Product;
@@ -10,11 +11,25 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 public class ProductorController {
 
     @Autowired
     private ProductService productService;
+
+
+
+
+    @GetMapping("/products")
+    public ResponseEntity<List<Product>> getProductByCategory(@RequestParam (required=false)ProductCategory category) {
+
+        List<Product> prodcutsList = productService.getProductByCategory(category);
+        return ResponseEntity.status(HttpStatus.OK).body(prodcutsList);
+
+
+    }
 
     @GetMapping("/products/{productId}")
     public ResponseEntity<Product> getProductById(@PathVariable Integer productId)

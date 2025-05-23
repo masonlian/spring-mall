@@ -1,5 +1,6 @@
 package com.masonlian.springmall.service.impl;
 
+import com.masonlian.springmall.constant.ProductCategory;
 import com.masonlian.springmall.dao.ProductDao;
 import com.masonlian.springmall.dto.ProductRequest;
 import com.masonlian.springmall.model.Product;
@@ -7,6 +8,8 @@ import com.masonlian.springmall.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PostMapping;
+
+import java.util.List;
 
 
 @Component
@@ -39,6 +42,11 @@ public class ProductServiceImpl implements ProductService {
     public void deleteProductById(Integer productId) {
         productDao.deleteProductById(productId);
     }
+    @Override
+    public List<Product> getProductByCategory(ProductCategory category){
+        return productDao.getProductByCategory(category);
+
+    };
 
 }
 
