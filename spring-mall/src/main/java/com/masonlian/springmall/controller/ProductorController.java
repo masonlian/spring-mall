@@ -1,7 +1,7 @@
 package com.masonlian.springmall.controller;
 
 import com.masonlian.springmall.constant.ProductCategory;
-import com.masonlian.springmall.dao.ProductDao;
+import com.masonlian.springmall.dto.ProductQueryPara;
 import com.masonlian.springmall.dto.ProductRequest;
 import com.masonlian.springmall.model.Product;
 import com.masonlian.springmall.service.ProductService;
@@ -22,10 +22,24 @@ public class ProductorController {
 
 
 
-    @GetMapping("/products")
-    public ResponseEntity<List<Product>> getProductByCategory(@RequestParam (required=false)ProductCategory category) {
 
-        List<Product> prodcutsList = productService.getProductByCategory(category);
+
+    @GetMapping("/products")
+    public ResponseEntity<List<Product>> getProduct
+            (@RequestParam (required=false)ProductCategory category,
+             @RequestParam (required=false) String search,
+             @RequestParam (defaultValue = "created_day")String orderBy,
+             @RequestParam (defaultValue= "desc")String sort
+            )
+    {
+
+        ProductQueryPara productQueryPara = new ProductQueryPara();
+        productQueryPara.setCategory(category);
+        productQueryPara.setSearch(search);
+        productQueryPara.setOrderBy(orderBy);
+        productQueryPara.setSort(sort);
+
+        List<Product> prodcutsList = productService.getProduct(productQueryPara,orderBy,sort);
         return ResponseEntity.status(HttpStatus.OK).body(prodcutsList);
 
 

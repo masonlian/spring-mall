@@ -2,6 +2,7 @@ package com.masonlian.springmall.dao.impl;
 
 import com.masonlian.springmall.constant.ProductCategory;
 import com.masonlian.springmall.dao.ProductDao;
+import com.masonlian.springmall.dto.ProductQueryPara;
 import com.masonlian.springmall.dto.ProductRequest;
 import com.masonlian.springmall.model.Product;
 import com.masonlian.springmall.rowmapper.ProductRowmapper;
@@ -94,23 +95,38 @@ public class ProductDaoImpl implements ProductDao {
     ;
 
     @Override
-    public List<Product> getProductByCategory(ProductCategory category) {
+    public List<Product> getProduct(ProductQueryPara productQueryPara) {
+
 
         String sql = "SELECT  product_id, product_name, category, image_url, price, stock, description, created_date, last_modified_date FROM product WHERE 1=1";
         Map<String, Object> map = new HashMap<>();
 
-        if (category != null) {
-            sql = sql + " AND category=:category";
-            map.put("category", category.name());
-        }
+        addFilteringSql(sql, map, productQueryPara); //透過用method去統一整理sql的操作，定義好getprodcut這個階層，在把對query的“動作封裝在同一個方法之中。
+
+        sql = sql + " ORDER BY " + productQueryPara.getOrderBy() + " " + productQueryPara.getSort();
 
         List<Product> productsList = namedParameterJdbcTemplate.query(sql, map, new ProductRowmapper());
+
         return productsList;
-    }//ProductrowMapper會將參數傳入sql中}
+
+    }
+
+
+    private String addFilteringSql(String sql,Map<String,Object> map, ProductQueryPara productQueryPara) {
+        if (productQueryPara.getCategory() != null) {
+            sql = sql + " AND category=:category";
+            map.put("category", productQueryPara.getCategory().name());
+        }
+        if (productQueryPara.getSearch() != null)
+            sql = sql + " AND product_name LIKE :search";
+        map.put("search", "%" + productQueryPara.getSearch() + "%");
+
+        return sql;
+    }
 }
+    //ProductrowMapper會將參數傳入sql中}
 
 
-    ;
 
 
 
