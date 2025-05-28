@@ -6,6 +6,7 @@ import com.masonlian.springmall.dto.ProductQueryPara;
 import com.masonlian.springmall.dto.ProductRequest;
 import com.masonlian.springmall.model.Product;
 import com.masonlian.springmall.rowmapper.ProductRowmapper;
+import com.masonlian.springmall.util.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -98,21 +99,25 @@ public class ProductDaoImpl implements ProductDao {
     public List<Product> getProduct(ProductQueryPara productQueryPara) {
 
 
-        String sql = "SELECT  product_id, product_name, category, image_url, price, stock, description, created_date, last_modified_date FROM product WHERE 1=1";
+        String sql = " SELECT  product_id, product_name, category, image_url, price, stock, description, created_date, last_modified_date FROM product WHERE 1=1";
         Map<String, Object> map = new HashMap<>();
 
-        addFilteringSql(sql, map, productQueryPara); //透過用method去統一整理sql的操作，定義好getprodcut這個階層，在把對query的“動作封裝在同一個方法之中。
+        sql = addFilteringSql(sql, map, productQueryPara); //透過用method去統一整理sql的操作，定義好getprodcut這個階層，在把對query的“動作封裝在同一個方法之中。
 
         sql = sql + " ORDER BY " + productQueryPara.getOrderBy() + " " + productQueryPara.getSort();
+        sql = sql + " LIMIT :limit OFFSET :offset ";
 
-        List<Product> productsList = namedParameterJdbcTemplate.query(sql, map, new ProductRowmapper());
+        map.put("limit",productQueryPara.getLimit());
+        map.put("offset",productQueryPara.getOffset());
 
-        return productsList;
+        List<Product> productList = namedParameterJdbcTemplate.query(sql, map, new ProductRowmapper());
+
+        return productList;
 
     }
 
 
-    private String addFilteringSql(String sql,Map<String,Object> map, ProductQueryPara productQueryPara) {
+    private String addFilteringSql(String sql, Map<String, Object> map, ProductQueryPara productQueryPara) {
         if (productQueryPara.getCategory() != null) {
             sql = sql + " AND category=:category";
             map.put("category", productQueryPara.getCategory().name());
@@ -123,8 +128,20 @@ public class ProductDaoImpl implements ProductDao {
 
         return sql;
     }
+
+
+    public Integer countProduct(ProductQueryPara productQueryPara) {
+        String sql = " SELECT COUNT(*) FROM product WHERE 1=1";
+        Map<String, Object> map = new HashMap<>();
+        addFilteringSql(sql, map, productQueryPara);
+        Integer total = namedParameterJdbcTemplate.queryForObject(sql, map, Integer.class);
+        return total;
+    }
 }
     //ProductrowMapper會將參數傳入sql中}
+    //有時候並不是我面對的事情真的很難，只是我害怕失敗罷了。
+
+
 
 
 

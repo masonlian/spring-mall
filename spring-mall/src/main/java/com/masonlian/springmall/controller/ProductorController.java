@@ -5,14 +5,19 @@ import com.masonlian.springmall.dto.ProductQueryPara;
 import com.masonlian.springmall.dto.ProductRequest;
 import com.masonlian.springmall.model.Product;
 import com.masonlian.springmall.service.ProductService;
+import com.masonlian.springmall.util.Page;
+import jakarta.validation.ParameterNameProvider;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@Validated
 @RestController
 public class ProductorController {
 
@@ -25,22 +30,41 @@ public class ProductorController {
 
 
     @GetMapping("/products")
-    public ResponseEntity<List<Product>> getProduct
+    public ResponseEntity<Page<Product>> getProduct
             (@RequestParam (required=false)ProductCategory category,
              @RequestParam (required=false) String search,
-             @RequestParam (defaultValue = "created_day")String orderBy,
-             @RequestParam (defaultValue= "desc")String sort
+
+             @RequestParam (defaultValue = "created_date")String orderBy,
+             @RequestParam (defaultValue = "desc")String sort,
+
+             @RequestParam (name = "limit",defaultValue = " 5 ") @Max(100) @Min(0) int limit,
+             @RequestParam (defaultValue = " 1 ") @Min(0) Integer offset
             )
     {
 
         ProductQueryPara productQueryPara = new ProductQueryPara();
+
         productQueryPara.setCategory(category);
         productQueryPara.setSearch(search);
         productQueryPara.setOrderBy(orderBy);
         productQueryPara.setSort(sort);
+        productQueryPara.setLimit(limit);
+        productQueryPara.setOffset(offset);
 
-        List<Product> prodcutsList = productService.getProduct(productQueryPara,orderBy,sort);
-        return ResponseEntity.status(HttpStatus.OK).body(prodcutsList);
+        System.out.println("limit = " + productQueryPara.getLimit());
+        System.out.println("offset = " + productQueryPara.getOffset());
+
+        List<Product> prodcutsList = productService.getProduct(productQueryPara);
+
+        Integer total = productService.countProduct(productQueryPara);
+
+        Page<Product> page = new Page<>();
+        page.setLimit(limit);
+        page.setOffset(offset);
+        page.setTotal(total);
+        page.setResult(prodcutsList); //page只負責接住操作結果並且回傳參數給前端並不會實際去操作底層SQL
+
+        return ResponseEntity.status(HttpStatus.OK).body(page);
 
 
     }

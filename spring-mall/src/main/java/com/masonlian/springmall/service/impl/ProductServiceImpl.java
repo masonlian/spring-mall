@@ -6,6 +6,7 @@ import com.masonlian.springmall.dto.ProductQueryPara;
 import com.masonlian.springmall.dto.ProductRequest;
 import com.masonlian.springmall.model.Product;
 import com.masonlian.springmall.service.ProductService;
+import com.masonlian.springmall.util.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -44,10 +45,14 @@ public class ProductServiceImpl implements ProductService {
         productDao.deleteProductById(productId);
     }
     @Override
-    public List<Product>  getProduct(ProductQueryPara productQueryPara, String orderBy, String sort) {
-        return productDao.getProduct(productQueryPara,orderBy,sort);
+    public List<Product> getProduct(ProductQueryPara productQueryPara) {
+        return productDao.getProduct(productQueryPara);
 
     };
+    public Integer countProduct(ProductQueryPara productQueryPara) {
+
+        return productDao.countProduct(productQueryPara);
+    }
 
 }
 
