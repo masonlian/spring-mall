@@ -19,4 +19,5 @@ public interface ProductDao {
 
     public List<Product> getProduct(ProductQueryPara productQueryPara);
     public Integer countProduct(ProductQueryPara productQueryPara);
+    public void updateStock(Integer productId, Integer stock);
 }

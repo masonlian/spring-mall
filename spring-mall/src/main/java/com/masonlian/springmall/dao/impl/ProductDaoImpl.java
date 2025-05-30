@@ -107,8 +107,8 @@ public class ProductDaoImpl implements ProductDao {
         sql = sql + " ORDER BY " + productQueryPara.getOrderBy() + " " + productQueryPara.getSort();
         sql = sql + " LIMIT :limit OFFSET :offset ";
 
-        map.put("limit",productQueryPara.getLimit());
-        map.put("offset",productQueryPara.getOffset());
+        map.put("limit", productQueryPara.getLimit());
+        map.put("offset", productQueryPara.getOffset());
 
         List<Product> productList = namedParameterJdbcTemplate.query(sql, map, new ProductRowmapper());
 
@@ -136,6 +136,19 @@ public class ProductDaoImpl implements ProductDao {
         addFilteringSql(sql, map, productQueryPara);
         Integer total = namedParameterJdbcTemplate.queryForObject(sql, map, Integer.class);
         return total;
+    }
+
+    public void updateStock(Integer productId, Integer stock) {
+
+        String str = " UPDATE product SET stock=:stock ,last_modified_date=:last_modified_date WHERE product_id=:productId";
+        Map<String, Object> map = new HashMap<>();
+        map.put("stock", stock);
+        map.put("productId", productId);
+        map.put("last_modified_date", new Date());
+
+        namedParameterJdbcTemplate.update(str, map);
+
+
     }
 }
     //ProductrowMapper會將參數傳入sql中}

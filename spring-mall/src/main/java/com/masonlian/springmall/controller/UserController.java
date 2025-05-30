@@ -26,7 +26,7 @@ public class UserController {
     private UserService userService;
 
 
-    @PostMapping("/User/register") //註冊新帳號
+    @PostMapping("/user/register") //註冊新帳號
     public ResponseEntity<User> register(@RequestBody @Valid UserRegisterRequest userRegisterRequest) {
         //Dao曾
         Integer userId = userService.register(userRegisterRequest);// user這個物件創建好之後就可以做傳導userId了
@@ -35,6 +35,7 @@ public class UserController {
         //retrun 創建好的user資料給前端 所以要先構造一個get方法去取得剛post進去的資料，一進一出。
         //函數不是只能夠操作回傳的值，我可以做完操作之後再回傳一個特定的東西，不要被表象給騙了
         User user = userService.getUserById(userId);
+        System.out.println("該註冊電子信箱為："+user.getEmail());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }

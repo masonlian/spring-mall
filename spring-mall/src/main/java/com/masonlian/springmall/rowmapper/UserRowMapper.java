@@ -13,7 +13,7 @@ public class UserRowMapper implements RowMapper<User> {
 
         User user = new User();
 
-        user.setUserId(resultSet.getInt("userId"));
+        user.setUserId(resultSet.getInt("user_id"));
         user.setEmail(resultSet.getString("email"));
         user.setPassword(resultSet.getString("password"));
         user.setCreatedDate(resultSet.getTimestamp("created_date"));
